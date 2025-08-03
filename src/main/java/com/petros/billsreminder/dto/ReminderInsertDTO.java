@@ -1,0 +1,25 @@
+package com.petros.billsreminder.dto;
+
+
+import com.petros.billsreminder.core.enums.ReminderType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class ReminderInsertDTO {
+
+        private String title;
+        private String description;
+        private ReminderType type;
+        private String dueDate;
+        private String notes;
+        private Long userId; // so we can link to the user
+    }
+
