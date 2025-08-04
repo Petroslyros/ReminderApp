@@ -19,10 +19,9 @@ public class ReminderInsertDTO {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private String title;
-        private String description;
+        private String notes;
         private ReminderType type;
         private String dueDate;
-        private String notes;
         private Long userId; // so we can link to the user
     }
 

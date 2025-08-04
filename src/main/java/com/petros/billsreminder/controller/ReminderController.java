@@ -20,8 +20,8 @@ public class ReminderController {
     private final ReminderService service;
 
     @GetMapping("/users/{userId}/reminders")
-    public ResponseEntity<List<Reminder>> getRemindersPerUserId(@PathVariable Long userId) {
-        List<Reminder> reminders = service.getReminderByUserId(userId);
+    public ResponseEntity<List<ReminderReadOnlyDTO>> getRemindersPerUserId(@PathVariable Long userId) {
+        List<ReminderReadOnlyDTO> reminders = service.getReminderByUserId(userId);
         return ResponseEntity.ok(reminders);
     }
 

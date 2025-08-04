@@ -41,8 +41,11 @@ public class ReminderService implements IReminderService {
                 .toList();
     }
 
-    public List<Reminder> getReminderByUserId(Long userId) {
-        return reminderRepo.findByUserId(userId);
+    public List<ReminderReadOnlyDTO> getReminderByUserId(Long userId) {
+        List<Reminder> reminders = reminderRepo.findByUserId(userId);
+        return reminders.stream()
+                .map(mapper::toReadOnlyDTO)
+                .toList();
     }
 
     public ReminderReadOnlyDTO updateReminder(Long id, ReminderInsertDTO dto) {
