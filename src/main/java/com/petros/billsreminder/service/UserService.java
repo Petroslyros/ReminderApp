@@ -21,8 +21,9 @@ public class UserService implements IUserService {
         return userRepo.findAll();
     }
 
+
     @Override
-    public UserReadOnlyDTO saveUser(UserInsertDTO dto) {
-        return null;
+    public User saveUser(User user) {
+        return userRepo.save(user);
     }
 }

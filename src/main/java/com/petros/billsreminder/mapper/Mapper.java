@@ -44,6 +44,26 @@ public class Mapper {
         return new Reminder(null,dto.getTitle(),dto.getType(),dto.getDueDate(),dto.getNotes(),null);
     }
 
+    public ReminderReadOnlyDTO toReadOnlyDTO(Reminder reminder) {
+        ReminderReadOnlyDTO dto = new ReminderReadOnlyDTO();
+        dto.setId(reminder.getId());
+        dto.setTitle(reminder.getTitle());
+        dto.setDueDate(reminder.getDueDate());
+        dto.setNotes(reminder.getNotes());
+        return dto;
+    }
+    public Reminder reminderInsertDTOToEntity(ReminderInsertDTO dto, User user) {
+        Reminder reminder = new Reminder();
+        reminder.setCreatedAt(LocalDateTime.now());
+        reminder.setUpdatedAt(LocalDateTime.now());
+        reminder.setTitle(dto.getTitle());
+        reminder.setType(dto.getType());
+        reminder.setDueDate(dto.getDueDate());
+        reminder.setNotes(dto.getNotes());
+        reminder.setUser(user); // associate user entity
+        return reminder;
+    }
+
 
 
 }

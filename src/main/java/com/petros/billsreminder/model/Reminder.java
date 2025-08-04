@@ -21,6 +21,8 @@ public class Reminder extends AbstractEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
+    @Enumerated(EnumType.STRING)
     private ReminderType type;
     private String dueDate;
     private String notes;

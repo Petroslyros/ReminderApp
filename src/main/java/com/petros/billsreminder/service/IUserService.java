@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IUserService {
 
-    UserReadOnlyDTO saveUser (UserInsertDTO dto);
+    User saveUser (User user);
 }

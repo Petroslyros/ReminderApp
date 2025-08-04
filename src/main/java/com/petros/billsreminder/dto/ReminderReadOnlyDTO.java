@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 public class ReminderReadOnlyDTO {
     private Long id;
     private String title;
-    private String description;
-    private LocalDate dueDate;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String dueDate;
+    private String notes;
 }

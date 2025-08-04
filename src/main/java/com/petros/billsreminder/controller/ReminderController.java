@@ -2,6 +2,7 @@ package com.petros.billsreminder.controller;
 
 
 import com.petros.billsreminder.dto.ReminderInsertDTO;
+import com.petros.billsreminder.dto.ReminderReadOnlyDTO;
 import com.petros.billsreminder.model.Reminder;
 import com.petros.billsreminder.service.ReminderService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,24 @@ public class ReminderController {
     }
 
     @PostMapping("/reminders")
-    public ResponseEntity<Reminder> createReminder(@RequestBody ReminderInsertDTO dto) {
-        Reminder savedReminder = service.saveReminder(dto);
+    public ResponseEntity<ReminderReadOnlyDTO> createReminder(@RequestBody ReminderInsertDTO dto) {
+        ReminderReadOnlyDTO savedReminder = service.createReminder(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReminder);
     }
+
+    @PutMapping("/reminders/{id}")
+    public ResponseEntity<ReminderReadOnlyDTO> updateReminder(@PathVariable Long id
+            , @RequestBody ReminderInsertDTO dto) {
+        ReminderReadOnlyDTO updateReminder = service.updateReminder(id, dto);
+        return ResponseEntity.ok(updateReminder);
+    }
+
+    @DeleteMapping("/reminders/{id}")
+    public ResponseEntity<Void> deleteReminder(@PathVariable Long id) {
+        service.deleteReminder(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }

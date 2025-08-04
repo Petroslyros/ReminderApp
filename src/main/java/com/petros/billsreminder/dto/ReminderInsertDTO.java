@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +16,8 @@ import java.time.LocalDate;
 @Setter
 public class ReminderInsertDTO {
 
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
         private String title;
         private String description;
         private ReminderType type;
