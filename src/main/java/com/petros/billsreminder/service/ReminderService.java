@@ -1,5 +1,6 @@
 package com.petros.billsreminder.service;
 
+import com.petros.billsreminder.core.enums.ReminderType;
 import com.petros.billsreminder.dto.ReminderInsertDTO;
 import com.petros.billsreminder.dto.ReminderReadOnlyDTO;
 import com.petros.billsreminder.mapper.Mapper;
@@ -72,6 +73,14 @@ public class ReminderService implements IReminderService {
 
         reminderRepo.delete(reminder);
     }
+
+    public List<ReminderReadOnlyDTO> getRemindersByUserIdAndType(Long userId, ReminderType type) {
+        List<Reminder> reminders = reminderRepo.findByUserIdAndType(userId, type);
+        return reminders.stream()
+                .map(mapper::toReadOnlyDTO)
+                .toList();
+    }
+
 
 
 

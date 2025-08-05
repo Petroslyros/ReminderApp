@@ -1,6 +1,7 @@
 package com.petros.billsreminder.controller;
 
 
+import com.petros.billsreminder.core.enums.ReminderType;
 import com.petros.billsreminder.dto.ReminderInsertDTO;
 import com.petros.billsreminder.dto.ReminderReadOnlyDTO;
 import com.petros.billsreminder.model.Reminder;
@@ -38,11 +39,21 @@ public class ReminderController {
         return ResponseEntity.ok(updateReminder);
     }
 
-    @DeleteMapping("/reminders/{id}")
-    public ResponseEntity<Void> deleteReminder(@PathVariable Long id) {
-        service.deleteReminder(id);
+    @DeleteMapping("/reminders/{userId}")
+    public ResponseEntity<Void> deleteReminder(@PathVariable Long userId) {
+        service.deleteReminder(userId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/users/{userId}/reminders/filters")
+    public ResponseEntity<List<ReminderReadOnlyDTO>> getRemindersByType(@PathVariable Long userId, @RequestParam ReminderType type) {
+
+        List<ReminderReadOnlyDTO> reminders = service.getRemindersByUserIdAndType(userId,type);
+        return ResponseEntity.ok(reminders);
+    }
+
+
+    //getPaginatedReminders
 
 
 

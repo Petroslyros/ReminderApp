@@ -32,18 +32,15 @@ public class UserController {
         return new ResponseEntity<>(userService.registerUser(dto), HttpStatus.OK);
     }
 
-//    @PostMapping("/users")
-//    public ResponseEntity<User> saveUser(@RequestBody UserInsertDTO dto) {
-//        User user = mapper.mapDtoToUserEntity(dto);
-//        User savedUser = userService.saveUser(user);
-//        return new ResponseEntity<>(savedUser,HttpStatus.CREATED);
-//    }
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteReminder(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
-    // save userReadOnlyDto
     // getUserWithID
     //updateUser
-    //deleteUser
 
     //getPaginatedUsers
 

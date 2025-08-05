@@ -6,10 +6,12 @@ import com.petros.billsreminder.core.exceptions.ValidationException;
 import com.petros.billsreminder.dto.UserInsertDTO;
 import com.petros.billsreminder.dto.UserReadOnlyDTO;
 import com.petros.billsreminder.mapper.Mapper;
+import com.petros.billsreminder.model.Reminder;
 import com.petros.billsreminder.model.User;
 import com.petros.billsreminder.repository.UserRepo;
 import com.petros.billsreminder.security.SecurityConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,7 +23,7 @@ public class UserService implements IUserService {
 
     private final UserRepo userRepo;
     private final Mapper mapper;
-    private final SecurityConfig config;
+    private final PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers(){
         return userRepo.findAll();
@@ -35,7 +37,7 @@ public class UserService implements IUserService {
 
         User user = mapper.mapDtoToUserEntity(dto);
 
-        user.setPassword(config.passwordEncoder().encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.BASIC_USER);
 
         user.setCreatedAt(LocalDateTime.now());
@@ -43,6 +45,14 @@ public class UserService implements IUserService {
         User savedUser = userRepo.save(user);
 
         return mapper.mapUserEntityToReadOnlyDTO(savedUser);
-
     }
+
+    public void deleteUser(Long id) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reminder Not Found"));
+
+        userRepo.delete(user);
+    }
+
+
 }
