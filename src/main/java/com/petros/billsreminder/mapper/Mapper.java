@@ -17,7 +17,15 @@ import java.util.List;
 public class Mapper {
 
     public User mapDtoToUserEntity(UserInsertDTO dto) {
-        return new User(null, dto.getUsername(),dto.getEmail(),dto.getPassword(),dto.getFirstname(),dto.getLastname(),null,dto.getGender(),null);
+        return new User(null
+                ,dto.getUsername()
+                ,dto.getEmail()
+                ,dto.getPassword()
+                ,dto.getFirstname()
+                ,dto.getLastname()
+                ,null
+                ,dto.getGender()
+                ,null);
 
     }
 

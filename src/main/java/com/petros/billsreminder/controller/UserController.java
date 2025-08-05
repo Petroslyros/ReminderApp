@@ -1,6 +1,8 @@
 package com.petros.billsreminder.controller;
 
+import com.petros.billsreminder.core.exceptions.AppObjectAlreadyExists;
 import com.petros.billsreminder.dto.UserInsertDTO;
+import com.petros.billsreminder.dto.UserReadOnlyDTO;
 import com.petros.billsreminder.mapper.Mapper;
 import com.petros.billsreminder.model.User;
 import com.petros.billsreminder.service.UserService;
@@ -25,6 +27,11 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(),HttpStatus.OK);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<UserReadOnlyDTO> register(@RequestBody UserInsertDTO dto) throws AppObjectAlreadyExists {
+        return new ResponseEntity<>(userService.registerUser(dto), HttpStatus.OK);
+    }
+
 //    @PostMapping("/users")
 //    public ResponseEntity<User> saveUser(@RequestBody UserInsertDTO dto) {
 //        User user = mapper.mapDtoToUserEntity(dto);
@@ -39,6 +46,8 @@ public class UserController {
     //deleteUser
 
     //getPaginatedUsers
+
+
 
 
 }
