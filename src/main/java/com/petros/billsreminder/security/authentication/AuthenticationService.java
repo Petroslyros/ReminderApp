@@ -10,29 +10,32 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-@Service // Marks this class as a Spring service (a singleton bean for business logic)
-@RequiredArgsConstructor // Lombok annotation: creates a constructor with all final fields
+@Service
+@RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final JWTService jwtService; // Generates and validates JWT tokens
-    private final UserRepo userRepository; // Used to look up users (though not directly used here)
-    private final AuthenticationManager authenticationManager; // Authenticates credentials (username + password)
+    private final JWTService jwtService;                     // JWT utility service to generate tokens
+    private final UserRepo userRepository;                   // User repository for database access (not used here directly)
+    private final AuthenticationManager authenticationManager; // Spring Security component to perform authentication
 
+    /**
+     * Authenticates user credentials and returns AuthenticationResponseDTO with JWT token.
+     */
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO dto) {
-        // This performs the actual authentication step.
-        // If the credentials are wrong, an exception is thrown here.
+        // Try authenticating the user with username and password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
         );
 
-        // Gets the authenticated user (Spring Security stores it as the principal)
+        // If authentication succeeds, get authenticated User object from Authentication principal
         User user = (User) authentication.getPrincipal();
 
-        // Generates a JWT for the authenticated user, including the user's role
+        // Generate JWT token with username and role info
         String token = jwtService.generateToken(authentication.getName(), user.getRole().name());
 
-        // Return user's info and token in a DTO to the frontend
+        // Return response DTO with user's first and last names plus the JWT token
         return new AuthenticationResponseDTO(user.getFirstname(), user.getLastname(), token);
     }
 }
+
 

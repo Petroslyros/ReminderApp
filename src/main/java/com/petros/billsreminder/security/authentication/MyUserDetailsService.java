@@ -8,17 +8,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
+@Service                           // Marks this class as a Spring-managed service (singleton bean)
+@RequiredArgsConstructor           // Lombok generates a constructor for all final fields (here: userRepo)
 public class MyUserDetailsService implements UserDetailsService {
 
-    private final UserRepo userRepo;
+    private final UserRepo userRepo;  // Repository to access User data from the database
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Spring Security calls this during authentication.
-        // We look up the user by username and throw an exception if not found.
-        return userRepo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
+        // This method is called by Spring Security during the authentication process.
+        // It tries to find a User entity by the username provided during login.
+
+        return userRepo.findByUsername(username)    // Query the database for a user with the given username
+                .orElseThrow(() ->                   // If user not found,
+                        new UsernameNotFoundException(  // throw this exception which Spring Security expects,
+                                "User not found with username: " + username) // providing a useful error message.
+                );
     }
 }
+

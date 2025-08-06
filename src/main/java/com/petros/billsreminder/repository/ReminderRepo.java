@@ -16,4 +16,5 @@ public interface ReminderRepo extends JpaRepository<Reminder,Long> {
     @Query("SELECT r FROM Reminder r WHERE r.user.id = :userId AND r.type = :type")
     List<Reminder> findByUserIdAndType(@Param("userId") Long userId, @Param("type") ReminderType type);
 
+    List<Reminder> findByDueDate(String dueDate);
 }

@@ -24,49 +24,61 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JWTService jwtService;
-    private final UserDetailsService userDetailsService;
-
+    private final JWTService jwtService;               // Service for JWT token handling (creation, validation, extraction)
+    private final UserDetailsService userDetailsService; // Spring Security service to load user details by username
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader("Authorization"); // Extract "Authorization" header from request
         final String jwt;
         final String username;
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // If header is missing or doesn't start with "Bearer ", just continue filter chain without auth
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // Extract JWT token by removing "Bearer " prefix
         jwt = authHeader.substring(7).trim();
+
         try {
+            // Extract username (subject) from JWT token
             username = jwtService.extractSubject(jwt);
 
-            if(username!= null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // If username is not null and user not yet authenticated in this context
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Load user details from DB (or wherever) by username
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if(!jwtService.isTokenValid(jwt, userDetails)) {
+                // Validate token is still valid and matches user details
+                if (!jwtService.isTokenValid(jwt, userDetails)) {
                     throw new BadCredentialsException("Invalid Token");
                 }
+
+                // Create authentication token for Spring Security context with user details and authorities
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
 
+                // Set authentication into the SecurityContext (mark user as authenticated)
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (ExpiredJwtException e) {
-            //triggers the AuthenticationEntryPoint 401
+            // JWT expired: trigger 401 Unauthorized response through AuthenticationEntryPoint
             throw new AuthenticationCredentialsNotFoundException("Expired token", e);
         } catch (JwtException | IllegalArgumentException e) {
-            //triggers the AuthenticationEntryPoint 401
-            throw new BadCredentialsException("Invald token");
+            // JWT invalid or malformed: trigger 401 Unauthorized
+            throw new BadCredentialsException("Invalid token");
         } catch (Exception e) {
-            // triggers the AccessDeniedException 403
+            // Any other error: trigger 403 Forbidden response
             throw new AccessDeniedException("Token validation failed");
         }
 
+        // Continue with the filter chain (request processing)
         filterChain.doFilter(request, response);
     }
 }
+

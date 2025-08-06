@@ -32,35 +32,51 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-
-        return http.csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(request -> request
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .anyRequest().authenticated())
-                    .httpBasic(Customizer.withDefaults())  // postman login
-                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                    .build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection (careful in production)
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/api/email/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll() // Allow open access to auth endpoints
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/users/**")
+                        .hasRole("ADMIN")  // Only users with role ADMIN can DELETE on /users/**
+                        .anyRequest().authenticated() // All other requests require authentication
+                )
+                .httpBasic(Customizer.withDefaults()) // Enable basic auth (useful for testing with Postman)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless sessions for JWT
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter before Spring Security auth filter
+                .build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        // Retrieves the AuthenticationManager from the AuthenticationConfiguration.
+        // This manager is used to authenticate user credentials.
         return config.getAuthenticationManager();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService,
                                                          PasswordEncoder passwordEncoder) {
+        // Sets up DaoAuthenticationProvider, which is an AuthenticationProvider
+        // that retrieves user details from the UserDetailsService and uses the PasswordEncoder to verify passwords.
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+
+        // Inject the UserDetailsService (your custom user lookup)
         authProvider.setUserDetailsService(userDetailsService);
+
+        // Inject the PasswordEncoder to hash and verify passwords securely
         authProvider.setPasswordEncoder(passwordEncoder);
+
         return authProvider;
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // Returns a BCryptPasswordEncoder with strength 12
+        // BCrypt is a strong hashing algorithm recommended for storing passwords securely.
         return new BCryptPasswordEncoder(12);
     }
 }
