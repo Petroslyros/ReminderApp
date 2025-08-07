@@ -2,7 +2,7 @@ package com.petros.billsreminder.service;
 
 import com.petros.billsreminder.core.enums.Role;
 import com.petros.billsreminder.core.exceptions.AppObjectAlreadyExists;
-import com.petros.billsreminder.core.exceptions.ValidationException;
+import com.petros.billsreminder.core.exceptions.UserNotFoundException;
 import com.petros.billsreminder.dto.UserInsertDTO;
 import com.petros.billsreminder.dto.UserReadOnlyDTO;
 import com.petros.billsreminder.mapper.Mapper;
@@ -47,9 +47,9 @@ public class UserService implements IUserService {
         return mapper.mapUserEntityToReadOnlyDTO(savedUser);
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id) throws UserNotFoundException {
         User user = userRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reminder Not Found"));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         userRepo.delete(user);
     }

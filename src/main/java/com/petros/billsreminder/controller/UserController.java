@@ -1,6 +1,7 @@
 package com.petros.billsreminder.controller;
 
 import com.petros.billsreminder.core.exceptions.AppObjectAlreadyExists;
+import com.petros.billsreminder.core.exceptions.UserNotFoundException;
 import com.petros.billsreminder.dto.UserInsertDTO;
 import com.petros.billsreminder.dto.UserReadOnlyDTO;
 import com.petros.billsreminder.mapper.Mapper;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) throws UserNotFoundException {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

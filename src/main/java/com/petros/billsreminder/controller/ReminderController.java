@@ -2,6 +2,8 @@ package com.petros.billsreminder.controller;
 
 
 import com.petros.billsreminder.core.enums.ReminderType;
+import com.petros.billsreminder.core.exceptions.ReminderNotFoundException;
+import com.petros.billsreminder.core.exceptions.UserNotFoundException;
 import com.petros.billsreminder.dto.ReminderInsertDTO;
 import com.petros.billsreminder.dto.ReminderReadOnlyDTO;
 import com.petros.billsreminder.model.Reminder;
@@ -34,13 +36,13 @@ public class ReminderController {
 
     @PutMapping("/reminders/{id}")
     public ResponseEntity<ReminderReadOnlyDTO> updateReminder(@PathVariable Long id
-            , @RequestBody ReminderInsertDTO dto) {
+            , @RequestBody ReminderInsertDTO dto) throws UserNotFoundException, ReminderNotFoundException {
         ReminderReadOnlyDTO updateReminder = service.updateReminder(id, dto);
         return ResponseEntity.ok(updateReminder);
     }
 
     @DeleteMapping("/reminders/{userId}")
-    public ResponseEntity<Void> deleteReminder(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteReminder(@PathVariable Long userId) throws ReminderNotFoundException {
         service.deleteReminder(userId);
         return ResponseEntity.noContent().build();
     }

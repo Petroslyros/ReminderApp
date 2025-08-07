@@ -1,6 +1,8 @@
 package com.petros.billsreminder.service;
 
 import com.petros.billsreminder.core.enums.ReminderType;
+import com.petros.billsreminder.core.exceptions.ReminderNotFoundException;
+import com.petros.billsreminder.core.exceptions.UserNotFoundException;
 import com.petros.billsreminder.dto.ReminderInsertDTO;
 import com.petros.billsreminder.dto.ReminderReadOnlyDTO;
 import com.petros.billsreminder.mapper.Mapper;
@@ -49,12 +51,12 @@ public class ReminderService implements IReminderService {
                 .toList();
     }
 
-    public ReminderReadOnlyDTO updateReminder(Long id, ReminderInsertDTO dto) {
+    public ReminderReadOnlyDTO updateReminder(Long id, ReminderInsertDTO dto) throws ReminderNotFoundException, UserNotFoundException {
         Reminder existingReminder = reminderRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reminder not found"));
+                .orElseThrow(() -> new ReminderNotFoundException(id));
 
         User user = userRepo.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(dto.getUserId()));
 
         existingReminder.setTitle(dto.getTitle());
         existingReminder.setType(dto.getType());
@@ -67,9 +69,9 @@ public class ReminderService implements IReminderService {
 
     }
 
-    public void deleteReminder(Long id) {
+    public void deleteReminder(Long id) throws ReminderNotFoundException {
         Reminder reminder = reminderRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reminder Not Found"));
+                .orElseThrow(() -> new ReminderNotFoundException(id));
 
         reminderRepo.delete(reminder);
     }
