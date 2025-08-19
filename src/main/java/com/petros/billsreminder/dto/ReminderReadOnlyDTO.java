@@ -1,5 +1,6 @@
 package com.petros.billsreminder.dto;
 
+import com.petros.billsreminder.model.Reminder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,6 @@ public class ReminderReadOnlyDTO {
     private String title;
     private String dueDate;
     private String notes;
+
+
 }

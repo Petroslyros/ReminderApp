@@ -4,12 +4,13 @@ import com.petros.billsreminder.core.enums.ReminderType;
 import com.petros.billsreminder.dto.ReminderReadOnlyDTO;
 import com.petros.billsreminder.model.Reminder;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ReminderRepo extends JpaRepository<Reminder,Long> {
+public interface ReminderRepo extends JpaRepository<Reminder,Long>, JpaSpecificationExecutor<Reminder> {
 
     List<Reminder> findByUserId(Long userid);
 
