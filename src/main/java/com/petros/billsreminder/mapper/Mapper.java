@@ -23,7 +23,7 @@ public class Mapper {
                 ,dto.password()
                 ,dto.firstname()
                 ,dto.lastname()
-                ,null
+                ,dto.role()
                 ,dto.gender()
                 ,null);
 

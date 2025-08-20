@@ -1,6 +1,7 @@
 package com.petros.billsreminder.dto;
 
 import com.petros.billsreminder.core.enums.Gender;
+import com.petros.billsreminder.core.enums.Role;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -22,6 +23,7 @@ public record UserInsertDTO(
         @NotNull
         @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])^.{8,}$")
         String password,
+        Role role,
 
         String firstname,
         String lastname,

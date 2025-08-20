@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,6 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
@@ -38,8 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/email/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll() // Allow open access to auth endpoints
-                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/users/**")
-                        .hasRole("ADMIN")  // Only users with role ADMIN can DELETE on /users/**
+//                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/users/**")
+//                        .hasAuthority("ROLE_ADMIN")  // Only users with role ADMIN can DELETE on /users/**
                         .anyRequest().authenticated() // All other requests require authentication
                 )
                 .httpBasic(Customizer.withDefaults()) // Enable basic auth (useful for testing with Postman)

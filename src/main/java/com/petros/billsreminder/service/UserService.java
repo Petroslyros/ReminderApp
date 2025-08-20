@@ -36,7 +36,6 @@ public class UserService implements IUserService {
         User user = mapper.mapDtoToUserEntity(dto);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.BASIC_USER);
 
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
