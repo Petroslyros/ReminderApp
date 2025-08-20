@@ -18,13 +18,13 @@ public class Mapper {
 
     public User mapDtoToUserEntity(UserInsertDTO dto) {
         return new User(null
-                ,dto.getUsername()
-                ,dto.getEmail()
-                ,dto.getPassword()
-                ,dto.getFirstname()
-                ,dto.getLastname()
+                ,dto.username()
+                ,dto.email()
+                ,dto.password()
+                ,dto.firstname()
+                ,dto.lastname()
                 ,null
-                ,dto.getGender()
+                ,dto.gender()
                 ,null);
 
     }
@@ -49,7 +49,7 @@ public class Mapper {
     }
 
     public Reminder mapDtoToReminderEntity(ReminderInsertDTO dto, User user) {
-        return new Reminder(null,dto.getTitle(),dto.getType(),dto.getDueDate(),dto.getNotes(),null);
+        return new Reminder(null,dto.title(),dto.type(),dto.dueDate(),dto.notes(),null);
     }
 
     public ReminderReadOnlyDTO toReadOnlyDTO(Reminder reminder) {
@@ -64,10 +64,10 @@ public class Mapper {
         Reminder reminder = new Reminder();
         reminder.setCreatedAt(LocalDateTime.now());
         reminder.setUpdatedAt(LocalDateTime.now());
-        reminder.setTitle(dto.getTitle());
-        reminder.setType(dto.getType());
-        reminder.setDueDate(dto.getDueDate());
-        reminder.setNotes(dto.getNotes());
+        reminder.setTitle(dto.title());
+        reminder.setType(dto.type());
+        reminder.setDueDate(dto.dueDate());
+        reminder.setNotes(dto.notes());
         reminder.setUser(user); // associate user entity
         return reminder;
     }

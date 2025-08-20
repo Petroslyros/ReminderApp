@@ -3,7 +3,7 @@ package com.petros.billsreminder.security.authentication;
 import com.petros.billsreminder.dto.AuthenticationRequestDTO;
 import com.petros.billsreminder.dto.AuthenticationResponseDTO;
 import com.petros.billsreminder.model.User;
-import com.petros.billsreminder.repository.UserRepo;
+import com.petros.billsreminder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final JWTService jwtService;                     // JWT utility service to generate tokens
-    private final UserRepo userRepository;                   // User repository for database access (not used here directly)
+    private final UserRepository userRepository;                   // User repository for database access (not used here directly)
     private final AuthenticationManager authenticationManager; // Spring Security component to perform authentication
 
     /**
