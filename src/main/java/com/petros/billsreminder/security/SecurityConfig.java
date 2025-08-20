@@ -12,17 +12,17 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -37,12 +37,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection (careful in production)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/email/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll() // Allow open access to auth endpoints
+                                .requestMatchers("/api/email/**").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll() // Allow open access to auth endpoints
 //                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/users/**")
 //                        .hasAuthority("ROLE_ADMIN")  // Only users with role ADMIN can DELETE on /users/**
-                        .anyRequest().authenticated() // All other requests require authentication
+                                .anyRequest().authenticated() // All other requests require authentication
                 )
                 .httpBasic(Customizer.withDefaults()) // Enable basic auth (useful for testing with Postman)
                 .sessionManagement(session ->
@@ -50,6 +51,26 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter before Spring Security auth filter
                 .build();
     }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Add your React dev URL
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173", // React dev server
+                "http://localhost:3000", // optional if needed
+                "http://localhost:4200", // optional if needed
+                "https://coding-factory.apps.gov.gr",
+                "https://test-coding-factory.apps.gov.gr"
+        ));
+        configuration.setAllowedMethods(List.of("*")); // allow all HTTP methods
+        configuration.setAllowedHeaders(List.of("*")); // allow all headers
+        configuration.setAllowCredentials(true); // allow Authorization header
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
 
     @Bean
