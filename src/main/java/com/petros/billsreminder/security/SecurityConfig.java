@@ -55,11 +55,9 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Add your React dev URL
+
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173", // React dev server
-                "http://localhost:3000", // optional if needed
-                "http://localhost:4200", // optional if needed
                 "https://coding-factory.apps.gov.gr",
                 "https://test-coding-factory.apps.gov.gr"
         ));
